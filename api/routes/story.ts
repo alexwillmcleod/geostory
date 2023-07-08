@@ -1,6 +1,6 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Router } from 'express';
-
+import auth from '../middleware/auth'
 const client = new S3Client({});
 
 export const router = Router();

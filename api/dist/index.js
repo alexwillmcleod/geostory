@@ -18,7 +18,7 @@ app.get('/', async (req, res) => {
 });
 app.use('/story', story_1.router);
 app.use('/user', user_1.router);
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
 });
