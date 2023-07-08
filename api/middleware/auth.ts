@@ -1,34 +1,32 @@
 import { Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
+import { User } from '../db/schema';
 
-export default function auth(req: Request, res: Response, next: Function) {
-  const authHeader: string | undefined = req.header('Authorization');
+export default async function auth(
+  req: Request,
+  res: Response,
+  next: Function
+) {
+  const { email, password } = req.body;
 
-  const token: string | undefined = authHeader?.slice(7);
-  if (!token) return res.status(400).send('Unauthorized');
+  if (!email || !password)
+    return res.status(400).send('`email` and `password` are required fields');
 
-  const JWT_SECRET = process.env.JWT_SECRET!;
+  const foundUser = await User.findOne({ email, password });
+  if (!foundUser)
+    return res.status(400).send('`email` or `password` is incorrect');
 
-  verify(token!, JWT_SECRET, (err: any, decoded: any) => {
-    if (err) return res.status(400).send('Invalid Token');
-    req.body.user = decoded;
-  });
-
+  req.body.user = foundUser;
   return next();
 }
 
-export function maybeAuth(req: Request, res: Response, next: Function) {
-  const authHeader: string | undefined = req.header('Authorization');
+export async function maybeAuth(req: Request, res: Response, next: Function) {
+  const { email, password } = req.body;
 
-  const token: string | undefined = authHeader?.slice(7);
-  if (!token) return next();
+  if (!email || !password)
+    return res.status(400).send('`email` and `password` are required fields');
 
-  const JWT_SECRET = process.env.JWT_SECRET!;
-
-  verify(token!, JWT_SECRET, (err: any, decoded: any) => {
-    if (err) return next();
-    req.body.user = decoded;
-  });
-
+  const foundUser = await User.findOne({ email, password });
+  req.body.user = foundUser;
   return next();
 }
