@@ -1,25 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
+import { QrScanner } from '@yudiel/react-qr-scanner';
+import HeaderBar from '../components/HeaderBar';
+import PopUp from '../components/PopUp';
 
-interface PopUpProps {
-  data: string;
-  onClose: () => void;
-}
+interface LandingPageProps extends RouteComponentProps {}
 
-const PopUp: React.FC<PopUpProps> = ({ data, onClose }) => {
+const LandingPage: React.FC<LandingPageProps> = () => {
+  const [showPopUp, setShowPopUp] = useState(false);
+  const [qrCodeData, setQRCodeData] = useState('');
+
+  const handleOpenPopUp = (data: string) => {
+    setQRCodeData(data);
+    setShowPopUp(true);
+  };
+
+  const handleClosePopUp = () => {
+    setShowPopUp(false);
+  };
+
+  const handleQRCodeDecode = (result: string | null) => {
+    if (result) {
+      handleOpenPopUp(result);
+    }
+  };
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-8 rounded-lg">
-        <h2 className="text-2xl font-bold mb-4">Pop Up Title</h2>
-        <p className="text-gray-700">{data}</p>
-        <button
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4"
-          onClick={onClose}
-        >
-          Close
-        </button>
+    <div>
+      <HeaderBar />
+      <div className="flex items-center justify-center h-screen">
+        {!showPopUp && (
+          <QrScanner
+            onDecode={handleQRCodeDecode}
+            onError={(error) => console.log(error?.message)}
+          />
+        )}
       </div>
+
+      {showPopUp && <PopUp data={qrCodeData} onClose={handleClosePopUp} />}
     </div>
   );
 };
 
-export default PopUp;
+export default LandingPage;
