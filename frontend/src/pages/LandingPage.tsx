@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import { QrScanner } from '@yudiel/react-qr-scanner';
-import HeaderBar from '../components/HeaderBar';
+// import HeaderBar from '../components/HeaderBar';
 import PopUp from '../components/PopUp';
 
-interface LandingPageProps extends RouteComponentProps {}
 
-const LandingPage: React.FC<LandingPageProps> = () => {
+const LandingPage = () => {
   const [qrCodeData, setQRCodeData] = useState<string | null>(null);
 
   const handleQRCodeDecode = (result: string | null) => {
@@ -19,7 +17,6 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 
   return (
     <div>
-      <HeaderBar />
       <div className="flex items-center justify-center h-screen">
         {qrCodeData === null ? (
           <QrScanner

@@ -1,9 +1,10 @@
 import { Outlet } from "react-router";
+import Header from "../components/HeaderBar";
 
 const Page = () => {
   return (
     <div className="h-screen">
-      <div className="bg-[#586BA4] w-full border-2 h-24" />
+      <Header />
       <Outlet />
     </div>
   );
