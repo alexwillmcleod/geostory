@@ -1,34 +1,26 @@
 import express from 'express';
-import qrcode from 'qrcode';
-import { MongoClient } from "mongodb";
 import { config } from 'dotenv';
+import mongoose from 'mongoose';
+import { router as storyRouter } from './routes/story';
+import { router as userRouter } from './routes/user';
 
 config(); // Import environment variables from config
 
+const databaseUrl = process.env.DATABASE_URL!;
+
+mongoose.connect(databaseUrl);
+
 const app = express();
+app.use(express.json());
+
 app.get('/', async (req, res) => {
   return res.status(200).send('Hello, World!');
 });
 
-app.post('/story', async(req,res)=>{
-let text = "hi";
-qrcode.toString(text, { type: 'terminal' }, (err, qrCodeText) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
+app.use('/story', storyRouter);
+app.use('/user', userRouter);
 
-  console.log(qrCodeText);
-});
-
-});
-
-app.post('/')
-
-
-
-
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
