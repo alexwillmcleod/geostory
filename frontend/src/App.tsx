@@ -1,7 +1,7 @@
 import { IonApp } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Route } from 'react-router-dom';
-import LandingPage from './pages/landing';
+import LandingPage from './pages/LandingPage';
 
 function App() {
   return (
