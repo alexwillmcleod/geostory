@@ -13,12 +13,12 @@ const PopUp: React.FC<PopUpProps> = ({ onClose }) => {
       <div className="bg-white p-8 rounded-lg w-96">
         <div className="flex items-center justify-center h-40">
           <img
-            src="https://imgur.com/0Ns3zb2.jpeg"
+            src="https://i.ibb.co/2WFp8j7/Untitled-design.png"
             alt="Image Placeholder"
             className="object-contain h-full"
           />
         </div>
-        <h2 className="text-2xl font-bold mt-4">The Grass Touched By Backstreet Boys</h2>
+        <h2 className="text-2xl font-bold mt-4">The Grass Touched By Hackstreet Boys</h2>
         <p className="text-gray-700 text-sm mt-2">
           Amidst their virtual realm, four secluded students stumbled upon an extraordinary secret hidden within the blades of grass, forever altering their perception of the digital world.
         </p>
