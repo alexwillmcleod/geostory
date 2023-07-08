@@ -1,13 +1,13 @@
 import { IonApp } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
-import Page from './pages/Page'
 import { Route } from 'react-router'
+import CreatePage from './pages/CreatePage'
 
 function App() {
   return (
     <IonApp>
       <IonReactRouter>
-        <Route path="/" component={Page} />
+        <Route path="/create" component={CreatePage} />
       </IonReactRouter>
     </IonApp>
   )
