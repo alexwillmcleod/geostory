@@ -1,16 +1,18 @@
-import { IonApp } from '@ionic/react'
-import { IonReactRouter } from '@ionic/react-router'
-import { Route } from 'react-router'
-import CreatePage from './pages/CreatePage'
+import { Route } from "react-router";
+import CreatePage from "./pages/CreatePage";
+import { BrowserRouter, Routes } from "react-router-dom";
+import Page from "./pages/Page";
 
 function App() {
   return (
-    <IonApp>
-      <IonReactRouter>
-        <Route path="/create" component={CreatePage} />
-      </IonReactRouter>
-    </IonApp>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Page />}>
+          <Route path="create" element={<CreatePage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
