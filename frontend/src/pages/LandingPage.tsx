@@ -20,7 +20,8 @@ const LandingPage = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-center h-screen">
+      <div className="h-screen flex flex-col justify-center items-center">
+      <div className="text-4xl text-center mb-24 -mt-24 font-bold">SCAN STORY</div>
         {qrCodeData === null ? (
           <QrScanner
             onDecode={handleQRCodeDecode}
