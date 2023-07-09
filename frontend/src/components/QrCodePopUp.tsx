@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
-import { To, useNavigate } from "react-router";
+import { To, useNavigate } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import QRCode from 'react-qr-code';
 
 interface PopUpProps {
   data: string;
@@ -9,7 +10,7 @@ interface PopUpProps {
   onBack: () => void;
 }
 
-const QrPopUp: React.FC<PopUpProps> = ({ onClose, onBack }) => {
+const QrPopUp: React.FC<PopUpProps> = ({ onClose, onBack, data }) => {
   const popupRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -33,11 +34,13 @@ const QrPopUp: React.FC<PopUpProps> = ({ onClose, onBack }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div ref={popupRef} className="bg-white p-8 rounded-lg w-96">
+      <div
+        ref={popupRef}
+        className="bg-white p-8 rounded-lg w-96"
+      >
         <div className="flex items-center justify-center h-40">
-          <img
-            src="QR Code"
-            alt="QR CODE GOES HERE"
+          <QRCode
+            value={data}
             className="object-contain h-full"
           />
         </div>
@@ -48,16 +51,22 @@ const QrPopUp: React.FC<PopUpProps> = ({ onClose, onBack }) => {
         <div className="flex justify-between mt-4">
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded flex items-center"
-            onClick={() => handleNavigate("/landing")}
+            onClick={() => handleNavigate('/landing')}
           >
-            <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
+            <FontAwesomeIcon
+              icon={faArrowLeft}
+              className="mr-2"
+            />
             Back to Scan Page
           </button>
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded flex items-center"
             onClick={onClose}
           >
-            <FontAwesomeIcon icon={faDownload} className="mr-2" />
+            <FontAwesomeIcon
+              icon={faDownload}
+              className="mr-2"
+            />
             Save QR
           </button>
         </div>

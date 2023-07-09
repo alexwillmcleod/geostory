@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
-import { FaUpload } from "react-icons/fa";
-import { postData } from "../helpers/apiHelpers";
-import QrPopUp from "../components/QrCodePopUp";
+import { useEffect, useState } from 'react';
+import { FaUpload } from 'react-icons/fa';
+import { postData, postDataTextRes } from '../helpers/apiHelpers';
+import QrPopUp from '../components/QrCodePopUp';
 
 const CreatePage = () => {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [name, setName] = useState('');
+  const [id, setId] = useState('');
+  const [description, setDescription] = useState('');
   const [coverImage, setCoverImage] = useState<File>();
   const [audioFile, setAudioFile] = useState<File>();
   const [buttonDisabled, setButtonDisabled] = useState(true);
@@ -20,28 +21,30 @@ const CreatePage = () => {
   const submitForm = async () => {
     const formData = new FormData();
 
-    formData.append("name", name);
-    formData.append("description", description);
+    formData.append('name', name);
+    formData.append('description', description);
     formData.append(
-      "audio",
+      'audio',
       new Blob([audioFile!], { type: audioFile!.type }),
-      "audio.mp3"
+      'audio.mp3'
     );
     formData.append(
-      "photo",
+      'photo',
       new Blob([coverImage!], { type: coverImage!.type }),
-      "photo.jpg"
+      'photo.jpg'
     );
 
     const res = await postData(`story`, formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
       auth: {
-        username: "alexwillmcleod@gmail.com",
-        password: "password123",
+        username: 'alexwillmcleod@gmail.com',
+        password: 'password123',
       },
     });
+
+    setId(res);
 
     setShowPopUp(true);
   };
@@ -89,7 +92,10 @@ const CreatePage = () => {
           </button>
         )}
         <div className="mb-4">
-          <label htmlFor="name" className="text-xl">
+          <label
+            htmlFor="name"
+            className="text-xl"
+          >
             Story Title
           </label>
           <br />
@@ -101,7 +107,10 @@ const CreatePage = () => {
           />
         </div>
         <div className="mb-8">
-          <label htmlFor="description" className="text-xl">
+          <label
+            htmlFor="description"
+            className="text-xl"
+          >
             Story Description
           </label>
           <br />
@@ -152,7 +161,11 @@ const CreatePage = () => {
         </div>
       </div>
       {showPopUp && (
-        <QrPopUp onClose={handleClosePopUp} data={""} onBack={() => {}} />
+        <QrPopUp
+          onClose={handleClosePopUp}
+          data={id}
+          onBack={() => {}}
+        />
       )}
     </div>
   );
