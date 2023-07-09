@@ -4,6 +4,15 @@ import { FaUpload } from "react-icons/fa";
 const CreatePage = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [uploadedImage, setUploadedImage] = useState<null | string>(null);
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setUploadedImage(imageUrl);
+    }
+  };
 
   return (
     <div className="h-screen flex flex-col justify-center items-center">
@@ -12,16 +21,29 @@ const CreatePage = () => {
         <div className="border-2 rounded-lg p-8 mb-8 flex flex-col items-center">
           <label
             htmlFor="imageUpload"
-            className="cursor-pointer flex flex-col items-center"
+            className="cursor-pointer flex flex-col items-center w-full"
           >
-            <FaUpload className="text-3xl mb-2" />
-            <span>Cover Image</span>
+            <div className="w-full h-24 mb-2 relative">
+              {uploadedImage ? (
+                <img
+                  className="w-full h-full object-cover rounded-lg"
+                  src={uploadedImage}
+                  alt="Uploaded Cover"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <FaUpload className="text-3xl" />
+                </div>
+              )}
+            </div>
+            <span>{uploadedImage ? "Change Image" : "Cover Image"}</span>
           </label>
           <input
             id="imageUpload"
             type="file"
             accept="image/*"
             className="hidden"
+            onChange={handleImageUpload}
           />
         </div>
         <div className="mb-4">
