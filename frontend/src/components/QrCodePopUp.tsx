@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from "react";
 import { To, useNavigate } from "react-router";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDownload, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDownload, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 interface PopUpProps {
   data: string;
@@ -24,10 +24,10 @@ const QrPopUp: React.FC<PopUpProps> = ({ onClose, onBack }) => {
       }
     };
 
-    document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener("mousedown", handleOutsideClick);
 
     return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener("mousedown", handleOutsideClick);
     };
   }, [onClose]);
 
