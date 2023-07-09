@@ -1,18 +1,19 @@
-import React from "react";
 import { useNavigate } from "react-router";
 
-
 const HomePage = () => {
-
   const navigate = useNavigate();
 
-  const handleLogin = (id: any) => {
+  const handleLogin = () => {
     navigate("/login");
   };
 
   const handleSignUp = () => {
-    // Handle sign up logic
+    navigate("/signup");
   };
+
+  const handleScanCode = () => {
+    navigate("/landing");
+    };
 
   return (
     <div className="h-screen flex flex-col justify-center items-center">
@@ -30,6 +31,15 @@ const HomePage = () => {
         >
           Sign Up
         </button>
+        <br />
+        <div className="flex justify-center mt-4">
+          <button
+            className="bg-orange-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-lg"
+            onClick={handleScanCode}
+          >
+            Scan Code
+          </button>
+        </div>
       </div>
     </div>
   );

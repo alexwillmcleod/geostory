@@ -1,4 +1,5 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import{ useState, ChangeEvent, FormEvent } from "react";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -59,6 +60,11 @@ const LoginPage = () => {
         >
           Login
         </button>
+        <Link to="/homepage">
+          <button className="mt-4 text-blue-500 hover:text-blue-600 font-semibold">
+            Go Back Home
+          </button>
+        </Link>
       </form>
     </div>
   );
