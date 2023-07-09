@@ -1,16 +1,22 @@
-import { IonApp } from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
-import { Route } from 'react-router-dom';
-import LandingPage from './pages/LandingPage';
+import { Navigate, Route } from "react-router";
+import CreatePage from "./pages/CreatePage";
+import { BrowserRouter, Routes } from "react-router-dom";
+import Page from "./pages/Page";
+import ListenPage from "./pages/ListenPage";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
   return (
-    <IonApp>
-      <IonReactRouter>
-        <Route exact path="/" component={LandingPage} />
-        {/* Other routes */}
-      </IonReactRouter>
-    </IonApp>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/landing" />} />
+        <Route path="/" element={<Page />}>
+          <Route path="create" element={<CreatePage />} />
+          <Route path="listen/:id" element={<ListenPage />} />
+          <Route index path="landing" element={<LandingPage />}></Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
