@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Story, User } from '../db/schema';
 import multer from 'multer';
 import fs from 'fs';
+import cors from 'cors';
 
 const upload = multer({ dest: path.resolve(__dirname, './uploads/') });
 

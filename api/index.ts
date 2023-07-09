@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import { router as storyRouter } from './routes/story';
 import { router as userRouter } from './routes/user';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 
 config(); // Import environment variables from config
 
@@ -13,6 +14,11 @@ mongoose.connect(databaseUrl);
 
 const app = express();
 app.use(express.json());
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+  })
+);
 
 app.get('/', async (req, res) => {
   return res.status(200).send('Hello, World!');
