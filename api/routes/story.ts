@@ -1,22 +1,22 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import path from 'path';
-import { Request, Router, Response } from 'express';
-import auth from '../middleware/auth';
-import { v4 as uuidv4 } from 'uuid';
-import { Story, User } from '../db/schema';
-import multer from 'multer';
-import fs from 'fs';
-import cors from 'cors';
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import path from "path";
+import { Request, Router, Response } from "express";
+import auth from "../middleware/auth";
+import { v4 as uuidv4 } from "uuid";
+import { Story, User } from "../db/schema";
+import multer from "multer";
+import fs from "fs";
+import cors from "cors";
 
-const upload = multer({ dest: path.resolve(__dirname, './uploads/') });
+const upload = multer({ dest: path.resolve(__dirname, "./uploads/") });
 
-const client = new S3Client({ region: 'us-east-1' });
+const client = new S3Client({ region: "us-east-1" });
 
 export const router = Router();
 
 router.post(
-  '/',
-  upload.fields([{ name: 'photo' }, { name: 'audio' }]),
+  "/",
+  upload.fields([{ name: "photo" }, { name: "audio" }]),
   auth,
   async (req: Request, res: Response) => {
     const { name, description } = req.body;
@@ -24,36 +24,36 @@ router.post(
     if (!name || !description)
       return res
         .status(400)
-        .send('`name` and `description` are required fields');
+        .send("`name` and `description` are required fields");
 
     // @ts-ignore
-    const audioFileList = req.files['audio'];
+    const audioFileList = req.files["audio"];
     // @ts-ignore
-    const photoFileList = req.files['photo'];
+    const photoFileList = req.files["photo"];
 
     if (!audioFileList || !photoFileList)
-      return res.status(400).send('missing audio or photo file');
+      return res.status(400).send("missing audio or photo file");
 
     const audioFile = audioFileList[0];
     const photoFile = photoFileList[0];
 
-    if (!audioFile) return res.status(400).send('missing audio field');
+    if (!audioFile) return res.status(400).send("missing audio field");
     const audioExtension = path.extname(audioFile.originalname);
 
-    if (!photoFile) return res.status(400).send('missing photo field');
+    if (!photoFile) return res.status(400).send("missing photo field");
     const photoExtension = path.extname(photoFile.originalname);
 
     let audioFileKey: string = `${uuidv4()}${audioExtension}`;
     const audioCommand = new PutObjectCommand({
-      Bucket: 'geostory',
+      Bucket: "geostory",
       Key: audioFileKey,
       Body: fs.readFileSync(audioFile.path),
-      ContentType: 'audio/mpeg',
+      ContentType: "audio/mpeg",
     });
 
     let photoFileKey: string = `${uuidv4()}${photoExtension}`;
     const photoCommand = new PutObjectCommand({
-      Bucket: 'geostory',
+      Bucket: "geostory",
       Key: photoFileKey,
       Body: fs.readFileSync(photoFile.path),
     });
@@ -73,7 +73,7 @@ router.post(
       const audioResponse = await client.send(audioCommand);
       const photoResponse = await client.send(photoCommand);
       if (!audioResponse || !photoResponse)
-        return res.status(500).send('failed to upload audio or photo');
+        return res.status(500).send("failed to upload audio or photo");
       await storyDoc.save();
     } catch (err) {
       console.error(err);
@@ -83,15 +83,16 @@ router.post(
   }
 );
 
-router.get('/:id', async (req: Request, res: Response) => {
+router.get("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
-  if (!id) return res.status(400).send('`id` is a required param');
+  if (!id) return res.status(400).send("`id` is a required param");
+  console.log(id);
   const foundStory = await Story.findById(id);
   if (!foundStory)
-    return res.status(400).send('could not find story with that id');
+    return res.status(400).send("could not find story with that id");
 
   const author = await User.findById(foundStory.author);
-  if (!author) return res.status(500).send('could not find author for post');
+  if (!author) return res.status(500).send("could not find author for post");
 
   const story = {
     name: foundStory.name,
