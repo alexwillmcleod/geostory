@@ -36,3 +36,20 @@ router.post('/', async (req: Request, res: Response) => {
 
   return res.status(200).send('successfully created account');
 });
+router.get('/checkUser/:email', async (req: Request, res: Response) => {
+  //Checking by email,username wan not unique in database.
+  const { email } = req.params;
+
+  try {
+    const foundUser = await User.findOne({ email: email });
+    if (foundUser) {
+      const userId =  foundUser.id;
+      return res.status(200).json({ id: userId });
+    } else {
+      return res.status(404).send("Does not exist in the system");
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('An error occurred while checking user existence.');
+  }
+});
