@@ -39,12 +39,10 @@ const ListenPage = () => {
       </div>
       <div className="w-full max-w-md px-4 flex flex-col items-center">
         <h2 className="text-3xl font-bold mb-14">{story?.name}</h2>
-        <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg w-full mb-8">
-          Play
-        </button>
-        <audio controls className="w-full mb-4">
-          <source src={story?.audio} type="audio/mpeg" />
-        </audio>
+        {/* <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg w-full mb-8">
+          Play  
+        </button> */}
+        <audio controls className="w-full mb-4" src={story?.audio} />
         <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-3 px-6 rounded-lg w-full mt-10">
           Back to Scanner
         </button>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaUpload } from "react-icons/fa";
 import { postData } from "../helpers/apiHelpers";
 import QrPopUp from "../components/QrCodePopUp";
@@ -8,31 +8,41 @@ const CreatePage = () => {
   const [description, setDescription] = useState("");
   const [coverImage, setCoverImage] = useState<File>();
   const [audioFile, setAudioFile] = useState<File>();
-
-  const [uploadedImage, setUploadedImage] = useState<null | string>(null);
-  const [selectedAudio, setSelectedAudio] = useState<null | File>(null);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
   const [showPopUp, setShowPopUp] = useState(false); // State for controlling the pop-up
 
-  const submitForm = () => {};
+  useEffect(() => {
+    name.length && description.length && audioFile && coverImage
+      ? setButtonDisabled(false)
+      : setButtonDisabled(true);
+  }, [name, description, coverImage, audioFile]);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setUploadedImage(imageUrl);
-    }
-  };
+  const submitForm = async () => {
+    const formData = new FormData();
 
-  const handleAudioUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedAudio(file);
-    }
-  };
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append(
+      "audio",
+      new Blob([audioFile!], { type: audioFile!.type }),
+      "audio.mp3"
+    );
+    formData.append(
+      "photo",
+      new Blob([coverImage!], { type: coverImage!.type }),
+      "photo.jpg"
+    );
 
-  const handleSubmit = () => {
-    // Perform submission logic here
-    // Show the pop-up
+    const res = await postData(`story`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      auth: {
+        username: "alexwillmcleod@gmail.com",
+        password: "password123",
+      },
+    });
+
     setShowPopUp(true);
   };
 
@@ -41,78 +51,14 @@ const CreatePage = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col justify-center items-center">
+    <div className="h-screen flex flex-col justify-center items-center overflow-auto">
       <div className="text-4xl text-center mb-8 font-bold">Create GeoStory</div>
       <div className="w-full max-w-md px-4 mb-8">
-        {/* <form onSubmit={submitForm}>
-          <div className="border-2 rounded-lg p-8 mb-8 flex flex-col items-center">
-            <label
-              htmlFor="imageUpload"
-              className="cursor-pointer flex flex-col items-center"
-            >
-              <FaUpload className="text-3xl mb-2" />
-              <span>Cover Image</span>
-            </label>
-            <input
-              id="imageUpload"
-              type="file"
-              accept="image/*"
-              className="hidden"
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="name" className="text-xl">
-              Story Title
-            </label>
-            <br />
-            <input
-              id="name"
-              className="border-2 w-full py-2 pl-2"
-              type="text"
-              onChange={(e) => setName(String(e.target.value))}
-            />
-          </div>
-          <div className="mb-8">
-            <label htmlFor="description" className="text-xl">
-              Story Description
-            </label>
-            <br />
-            <textarea
-              id="description"
-              className="border-2 w-full pl-2 py-2"
-              rows={4}
-              onChange={(e) => setDescription(String(e.target.value))}
-            ></textarea>
-          </div>
-          <div className="border-2 rounded-lg p-8 mb-8 flex flex-col items-center">
-            <label
-              htmlFor="audioUpload"
-              className="cursor-pointer flex flex-col items-center"
-            >
-              <FaUpload className="text-3xl mb-2" />
-              <span>Add Audio File</span>
-            </label>
-            <input
-              id="audioUpload"
-              type="file"
-              accept="audio/*"
-              className="hidden"
-            />
-          </div>
-          <div className="text-center">
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg w-full"
-            >
-              Submit
-            </button>
-          </div>
-        </form> */}
         <div className="border-2 rounded-lg mb-8">
-          {uploadedImage ? (
+          {coverImage ? (
             <img
               className="w-full h-full object-cover rounded-lg"
-              src={uploadedImage}
+              src={URL.createObjectURL(coverImage)}
               alt="Uploaded Cover"
             />
           ) : (
@@ -129,15 +75,15 @@ const CreatePage = () => {
                 type="file"
                 accept="image/*"
                 className="hidden"
-                onChange={handleImageUpload}
+                onChange={(e) => setCoverImage(e.target.files?.[0])}
               />
             </div>
           )}
         </div>
-        {uploadedImage && (
+        {coverImage && (
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg w-full mb-8"
-            onClick={() => setUploadedImage(null)}
+            onClick={() => setCoverImage(undefined)}
           >
             Change Image
           </button>
@@ -167,12 +113,12 @@ const CreatePage = () => {
           ></textarea>
         </div>
         <div className="border-2 rounded-lg p-8 mb-8 flex flex-col items-center justify-center">
-          {selectedAudio ? (
+          {audioFile ? (
             <div className="flex flex-col items-center">
-              <span className="text-lg mb-2">{selectedAudio.name}</span>
+              <span className="text-lg mb-2">{audioFile.name}</span>
               <button
                 className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg"
-                onClick={() => setSelectedAudio(null)}
+                onClick={() => setAudioFile(undefined)}
               >
                 Remove Audio
               </button>
@@ -191,14 +137,15 @@ const CreatePage = () => {
             type="file"
             accept="audio/*"
             className="hidden"
-            onChange={handleAudioUpload}
+            onChange={(e) => setAudioFile(e.target.files?.[0])}
           />
         </div>
         <div className="text-center">
           <button
-            type="button"
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg w-full"
-            onClick={handleSubmit}
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg w-full disabled:opacity-50"
+            onClick={submitForm}
+            disabled={buttonDisabled}
           >
             Submit
           </button>

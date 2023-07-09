@@ -11,9 +11,9 @@ export const getData = async (endpoint: string) => {
   return response?.data;
 };
 
-export const postData = async (endpoint: string, body: JSON) => {
+export const postData = async (endpoint: string, body: any, options: any) => {
   const response = await axios
-    .post(`${baseURL}/${endpoint}`, body)
+    .post(`${baseURL}/${endpoint}`, body, options)
     .catch((err) => {
       console.log(err.response);
     });
