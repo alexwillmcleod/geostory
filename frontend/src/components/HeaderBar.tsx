@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router";
+import { To, useNavigate } from "react-router";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,7 +17,7 @@ const Header = () => {
     }
   };
 
-  const handleNavigate = (route) => {
+  const handleNavigate = (route: To) => {
     toggleMenu();
     navigate(route);
   };
@@ -69,24 +69,24 @@ const Header = () => {
             <ul className="px-4 py-2 space-y-2">
               <li>
                 <button
-                  className="bg-white w-full text-left"
+                  className="w-full text-left text-white  "
                   onClick={() => handleNavigate("/landing")}
                 >
                   Scan
                 </button>
               </li>
               <li className="bg-red">
-                <button
+                {/* <button
                   className="bg-white w-full text-left"
                   onClick={() => navigate("/profile")}
                   disabled
                 >
                   Profile
-                </button>
+                </button> */}
               </li>
               <li>
                 <button
-                  className="bg-white w-full text-left"
+                  className="w-full text-left text-white"
                   onClick={() => handleNavigate("/create")}
                 >
                   Create Story

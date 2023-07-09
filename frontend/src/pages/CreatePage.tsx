@@ -1,55 +1,76 @@
 import { useState } from "react";
+import { FaUpload } from "react-icons/fa";
 
 const CreatePage = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
   return (
-    <div className="items-center justify-center w-[90%] m-auto pt-2 space-y-8">
-      <div className="text-4xl text-center">Add a new place of interest</div>
-      <div className="border-2 text-center py-3">
-        <span className="text-xl">Add Image </span>
-        <input type="file" accept="image/*" />
-      </div>
-
-      <div>
-        <label htmlFor="name">
-          <span className="text-xl">Name </span>
-        </label>
-        <br />
-        <input
-          id="name"
-          className="border-2 w-full py-2"
-          type="text"
-          onChange={(e) => setName(String(e.target.value))}
-        />
-      </div>
-
-      <div>
-        <label htmlFor="description">
-          <span className="text-xl">Description</span>
-        </label>
-        <br />
-        <textarea
-          id="description"
-          className="border-2 w-full"
-          rows={4}
-          onChange={(e) => setDescription(String(e.target.value))}
-        ></textarea>
-      </div>
-
-      <div className="border-2 text-center py-3">
-        <span className="text-xl">Add audio file</span> <br />
-        <input type="file" accept="audio/*" />
-      </div>
-
-      <div className="text-center">
-        <button
-          type="button"
-          className="border-2 w-1/2 rounded-xl m-auto justify-center h-14"
-        >
-          Submit
-        </button>
+    <div className="h-screen flex flex-col justify-center items-center">
+      <div className="text-4xl text-center mb-8 font-bold">Create GeoStory</div>
+      <div className="w-full max-w-md px-4 mb-8">
+        <div className="border-2 rounded-lg p-8 mb-8 flex flex-col items-center">
+          <label
+            htmlFor="imageUpload"
+            className="cursor-pointer flex flex-col items-center"
+          >
+            <FaUpload className="text-3xl mb-2" />
+            <span>Cover Image</span>
+          </label>
+          <input
+            id="imageUpload"
+            type="file"
+            accept="image/*"
+            className="hidden"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="name" className="text-xl">
+            Story Title
+          </label>
+          <br />
+          <input
+            id="name"
+            className="border-2 w-full py-2 pl-2"
+            type="text"
+            onChange={(e) => setName(String(e.target.value))}
+          />
+        </div>
+        <div className="mb-8">
+          <label htmlFor="description" className="text-xl">
+            Story Description
+          </label>
+          <br />
+          <textarea
+            id="description"
+            className="border-2 w-full pl-2 py-2"
+            rows={4}
+            onChange={(e) => setDescription(String(e.target.value))}
+          ></textarea>
+        </div>
+        <div className="border-2 rounded-lg p-8 mb-8 flex flex-col items-center">
+          <label
+            htmlFor="audioUpload"
+            className="cursor-pointer flex flex-col items-center"
+          >
+            <FaUpload className="text-3xl mb-2" />
+            <span>Add Audio File</span>
+          </label>
+          <input
+            id="audioUpload"
+            type="file"
+            accept="audio/*"
+            className="hidden"
+          />
+        </div>
+        <div className="text-center">
+          <button
+            type="button"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg w-full"
+          >
+            Submit
+          </button>
+        </div>
       </div>
     </div>
   );
