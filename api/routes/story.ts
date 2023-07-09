@@ -14,45 +14,65 @@ const client = new S3Client({ region: 'us-east-1' });
 export const router = Router();
 
 router.post(
-  '/:name/:description',
-  upload.single('audio'),
+  '/',
+  upload.fields([{ name: 'photo' }, { name: 'audio' }]),
   auth,
   async (req: Request, res: Response) => {
-    const { name, description } = req.params;
+    const { name, description } = req.body;
 
     if (!name || !description)
       return res
         .status(400)
         .send('`name` and `description` are required fields');
 
-    console.log(req.file);
+    // @ts-ignore
+    const audioFileList = req.files['audio'];
+    // @ts-ignore
+    const photoFileList = req.files['photo'];
 
-    const file = req.file;
-    if (!file) return res.status(400).send('missing audio field');
-    const extension = path.extname(file.originalname);
+    if (!audioFileList || !photoFileList)
+      return res.status(400).send('missing audio or photo file');
 
-    console.log(file.buffer);
+    const audioFile = audioFileList[0];
+    const photoFile = photoFileList[0];
 
-    let fileKey: string = `${uuidv4()}${extension}`;
-    const command = new PutObjectCommand({
+    if (!audioFile) return res.status(400).send('missing audio field');
+    const audioExtension = path.extname(audioFile.originalname);
+
+    if (!photoFile) return res.status(400).send('missing photo field');
+    const photoExtension = path.extname(photoFile.originalname);
+
+    let audioFileKey: string = `${uuidv4()}${audioExtension}`;
+    const audioCommand = new PutObjectCommand({
       Bucket: 'geostory',
-      Key: fileKey,
-      Body: fs.readFileSync(file.path),
+      Key: audioFileKey,
+      Body: fs.readFileSync(audioFile.path),
       ContentType: 'audio/mpeg',
     });
 
-    const fileUrl = `https://geostory.s3.amazonaws.com/${fileKey}`;
+    let photoFileKey: string = `${uuidv4()}${photoExtension}`;
+    const photoCommand = new PutObjectCommand({
+      Bucket: 'geostory',
+      Key: photoFileKey,
+      Body: fs.readFileSync(photoFile.path),
+    });
+
+    const audioFileUrl = `https://geostory.s3.amazonaws.com/${audioFileKey}`;
+    const photoFileUrl = `https://geostory.s3.amazonaws.com/${photoFileKey}`;
 
     const storyDoc = new Story({
       name,
       author: req.body.user._id,
-      audio: fileUrl,
+      audio: audioFileUrl,
+      photo: photoFileUrl,
       description,
     });
 
     try {
-      const response = await client.send(command);
-      if (!response) return res.status(500).send('failed to upload audio');
+      const audioResponse = await client.send(audioCommand);
+      const photoResponse = await client.send(photoCommand);
+      if (!audioResponse || !photoResponse)
+        return res.status(500).send('failed to upload audio or photo');
       await storyDoc.save();
     } catch (err) {
       console.error(err);
@@ -77,6 +97,7 @@ router.get('/:id', async (req: Request, res: Response) => {
     authorName: author.name,
     description: foundStory.description,
     audio: foundStory.audio,
+    photo: foundStory.photo,
   };
 
   return res.status(200).json(story);

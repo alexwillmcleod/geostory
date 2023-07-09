@@ -6,6 +6,7 @@ exports.storySchema = new mongoose_1.Schema({
     name: String,
     author: mongoose_1.Schema.ObjectId,
     description: String,
+    photo: String,
     audio: String,
 });
 exports.userSchema = new mongoose_1.Schema({

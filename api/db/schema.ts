@@ -4,6 +4,7 @@ export const storySchema = new Schema({
   name: String,
   author: Schema.ObjectId,
   description: String,
+  photo: String,
   audio: String,
 });
 
