@@ -9,14 +9,11 @@ const CreatePage = () => {
   const [coverImage, setCoverImage] = useState<File>();
   const [audioFile, setAudioFile] = useState<File>();
 
-  const submitForm = () => {
-    console.log(audioFile);
-    console.log(coverImage);
-    console.log(name);
-    console.log(description);
   const [uploadedImage, setUploadedImage] = useState<null | string>(null);
   const [selectedAudio, setSelectedAudio] = useState<null | File>(null);
   const [showPopUp, setShowPopUp] = useState(false); // State for controlling the pop-up
+
+  const submitForm = () => {};
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -47,7 +44,7 @@ const CreatePage = () => {
     <div className="h-screen flex flex-col justify-center items-center">
       <div className="text-4xl text-center mb-8 font-bold">Create GeoStory</div>
       <div className="w-full max-w-md px-4 mb-8">
-        <form onSubmit={submitForm}>
+        {/* <form onSubmit={submitForm}>
           <div className="border-2 rounded-lg p-8 mb-8 flex flex-col items-center">
             <label
               htmlFor="imageUpload"
@@ -110,7 +107,7 @@ const CreatePage = () => {
               Submit
             </button>
           </div>
-        </form>
+        </form> */}
         <div className="border-2 rounded-lg mb-8">
           {uploadedImage ? (
             <img
@@ -181,7 +178,10 @@ const CreatePage = () => {
               </button>
             </div>
           ) : (
-            <label htmlFor="audioUpload" className="cursor-pointer flex flex-col items-center">
+            <label
+              htmlFor="audioUpload"
+              className="cursor-pointer flex flex-col items-center"
+            >
               <FaUpload className="text-3xl mb-2" />
               <span>Add Audio File</span>
             </label>
@@ -204,7 +204,9 @@ const CreatePage = () => {
           </button>
         </div>
       </div>
-      {showPopUp && <QrPopUp onClose={handleClosePopUp} data={""} onBack={() => {}} />}
+      {showPopUp && (
+        <QrPopUp onClose={handleClosePopUp} data={""} onBack={() => {}} />
+      )}
     </div>
   );
 };
