@@ -1,25 +1,28 @@
 import { useNavigate } from "react-router";
 
 const ListenPage = () => {
-  const url = "http://streaming.tdiradio.com:8000/house.mp3"; //Just a sample URL from the internet
+  const url = "http://streaming.tdiradio.com:8000/house.mp3"; // Just a sample URL from the internet
 
   const navigate = useNavigate();
 
   return (
-    <div className="border-2 border-red-400 h-full text-center flex-1">
-      <div className="h-2/5 border-blue-400 border-2">Cover image</div>
-      <div className="border-green-100 border-2 pt-2 space-y-3">
-        <span className="text-3xl">Name</span>
-        <div>Play</div>
-        {/* <div>Back</div> */}
-        <audio controls>
+    <div className="h-full flex flex-col justify-center items-center">
+      <div className="w-64 h-64 bg-blue-400 rounded-lg mb-8 mt-1 flex justify-center items-center">
+        <img
+          className="max-w-full max-h-full"
+          src="cover-image-url"
+          alt="Cover OKA"
+        />
+      </div>
+      <div className="w-full max-w-md px-4 flex flex-col items-center">
+        <h2 className="text-3xl font-bold mb-14">Story Title</h2>
+        <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg w-full mb-8">
+          Play
+        </button>
+        <audio controls className="w-full mb-4">
           <source src={url} type="audio/mpeg" />
         </audio>
-        {/* <ReactAudioPlayer src=tes/> */}
-        <button
-          className="border-2 w-1/2 rounded-xl m-auto justify-center h-14"
-          onClick={() => navigate("/landing")}
-        >
+        <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-3 px-6 rounded-lg w-full mt-10">
           Back to Scanner
         </button>
       </div>

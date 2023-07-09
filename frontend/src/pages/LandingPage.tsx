@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { QrScanner } from "@yudiel/react-qr-scanner";
+import { useState } from 'react';
+import { QrScanner } from '@yudiel/react-qr-scanner';
 // import HeaderBar from '../components/HeaderBar';
 import PopUp from "../components/PopUp";
 import { useNavigate } from "react-router";
