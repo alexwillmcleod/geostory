@@ -7,10 +7,15 @@ export default async function auth(
   res: Response,
   next: Function
 ) {
-  const { email, password } = req.body;
+  const b64auth = (req.headers.authorization || '').split(' ')[1] || '';
+  const [email, password] = Buffer.from(b64auth, 'base64')
+    .toString()
+    .split(':');
 
   if (!email || !password)
-    return res.status(400).send('`email` and `password` are required fields');
+    return res
+      .status(400)
+      .send('`email` and `password` are required in basic auth');
 
   const foundUser = await User.findOne({ email, password });
   if (!foundUser)

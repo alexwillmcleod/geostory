@@ -1,26 +1,72 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { Router } from 'express';
+import path from 'path';
+import { Request, Router, Response } from 'express';
+import auth from '../middleware/auth';
+import { v4 as uuidv4 } from 'uuid';
+import { Story } from '../db/schema';
+import multer from 'multer';
+import fs from 'fs';
 
-const client = new S3Client({});
+const upload = multer({ dest: path.resolve(__dirname, './uploads/') });
+
+const client = new S3Client({ region: 'us-east-1' });
 
 export const router = Router();
 
-router.post('/', auth, async (req: any, res: any) => {
-  if (!req.body.uploadedFileName)
-    return res.status(400).send('you must upload a file');
+router.post(
+  '/:name/:description',
+  upload.single('audio'),
+  auth,
+  async (req: Request, res: Response) => {
+    const { name, description } = req.params;
 
-  const fileContent = Buffer.from(req.body.uploadedFileName.data, 'binary');
+    if (!name || !description)
+      return res
+        .status(400)
+        .send('`name` and `description` are required fields');
 
-  const command = new PutObjectCommand({
-    Bucket: 'geostory',
-    Key: undefined,
-    Body: fileContent,
-  });
+    console.log(req.file);
 
-  try {
-    const response = await client.send(command);
-    if (!response) return res.status(500).send('failed to upload audio');
-  } catch (err) {
-    console.error(err);
+    const file = req.file;
+    if (!file) return res.status(400).send('missing audio field');
+    const extension = path.extname(file.originalname);
+
+    console.log(file.buffer);
+
+    let fileKey: string = `${uuidv4()}${extension}`;
+    const command = new PutObjectCommand({
+      Bucket: 'geostory',
+      Key: fileKey,
+      Body: fs.readFileSync(file.path),
+      ContentType: 'audio/mpeg',
+    });
+
+    const fileUrl = `https://geostory.s3.amazonaws.com/${fileKey}`;
+
+    const storyDoc = new Story({
+      name,
+      author: req.body.user._id,
+      audio: fileUrl,
+      description,
+    });
+
+    try {
+      const response = await client.send(command);
+      if (!response) return res.status(500).send('failed to upload audio');
+      await storyDoc.save();
+    } catch (err) {
+      console.error(err);
+    }
+
+    return res.status(200).send(fileUrl);
   }
+);
+
+router.get('/:id', async (req: Request, res: Response) => {
+  const { id } = req.query;
+  if (!id) return res.status(400).send('`id` is a required query');
+  const foundStory = await Story.findOne({ audio: id });
+  if (!foundStory)
+    return res.status(400).send('could not find story with that id');
+  return res.status(200).json(foundStory);
 });

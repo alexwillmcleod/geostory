@@ -3,6 +3,7 @@ import { config } from 'dotenv';
 import mongoose from 'mongoose';
 import { router as storyRouter } from './routes/story';
 import { router as userRouter } from './routes/user';
+import bodyParser from 'body-parser';
 
 config(); // Import environment variables from config
 
