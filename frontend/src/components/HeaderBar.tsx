@@ -1,8 +1,11 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -14,11 +17,16 @@ const Header = () => {
     }
   };
 
+  const handleNavigate = (route) => {
+    toggleMenu();
+    navigate(route);
+  };
+
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -60,20 +68,29 @@ const Header = () => {
           >
             <ul className="px-4 py-2 space-y-2">
               <li>
-                <a
-                  href="#"
-                  className="block text-white hover:text-gray-300"
+                <button
+                  className="bg-white w-full text-left"
+                  onClick={() => handleNavigate("/landing")}
                 >
                   Scan
-                </a>
+                </button>
               </li>
-              <li>
-                <a
-                  href="#"
-                  className="block text-white hover:text-gray-300"
+              <li className="bg-red">
+                <button
+                  className="bg-white w-full text-left"
+                  onClick={() => navigate("/profile")}
+                  disabled
                 >
                   Profile
-                </a>
+                </button>
+              </li>
+              <li>
+                <button
+                  className="bg-white w-full text-left"
+                  onClick={() => handleNavigate("/create")}
+                >
+                  Create Story
+                </button>
               </li>
             </ul>
           </div>

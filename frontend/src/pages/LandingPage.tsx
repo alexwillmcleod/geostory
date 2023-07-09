@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
-import { QrScanner } from '@yudiel/react-qr-scanner';
+import React, { useState } from "react";
+import { QrScanner } from "@yudiel/react-qr-scanner";
 // import HeaderBar from '../components/HeaderBar';
-import PopUp from '../components/PopUp';
-
+import PopUp from "../components/PopUp";
+import { useNavigate } from "react-router";
 
 const LandingPage = () => {
   const [qrCodeData, setQRCodeData] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   const handleQRCodeDecode = (result: string | null) => {
     setQRCodeData(result);
   };
 
-  const handlePopUpClose = () => {
+  const handlePopUpClose = (id: any) => {
     setQRCodeData(null);
+    navigate("/listen/" + id);
   };
 
   return (
@@ -24,7 +27,7 @@ const LandingPage = () => {
             onError={(error) => console.log(error?.message)}
           />
         ) : (
-          <PopUp data={qrCodeData} onClose={handlePopUpClose} />
+          <PopUp data={qrCodeData} onClose={() => handlePopUpClose(1)} />
         )}
       </div>
     </div>
